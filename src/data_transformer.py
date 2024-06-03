@@ -7,23 +7,20 @@ from sklearn.pipeline import Pipeline
 
 
 class DataTransformer:
-    def __init__(self, df: pd.DataFrame,
-                 features_to_remove: List[str],
-                 age_order: List[str],
-                 education_order: List[str],
-                 month_order: List[str],
-                 poutcome_order: List[str],
-                 binary_mapping: Dict[str, int],
-                 columns_to_map: List[str]
-                 ):
+    def __init__(self, df: pd.DataFrame):
         self.df = df
-        self.features_to_remove = features_to_remove
-        self.age_order = age_order
-        self.education_order = education_order
-        self.month_order = month_order
-        self.poutcome_order = poutcome_order
-        self.binary_mapping = binary_mapping
-        self.columns_to_map = columns_to_map
+
+        self.features_to_remove = ["duration", "day_of_week"]
+        # hierarchical order for some ordinal features
+        self.age_order = ["young", "young_adult", "middle_aged", "late_middle_aged", "old_age"]
+        self.education_order = ["illiterate", "education.basic", "high.school", "professional.course",
+                                "university.degree"]
+        self.month_order = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+        self.poutcome_order = ["nonexistent", "failure", "success"]
+
+        # binary mapping definitions
+        self.binary_mapping = {"yes": 1, "no": 0}
+        self.columns_to_map = ["default", "loan", "housing", "y"] if "y" in self.df.columns else ["default", "loan", "housing"]
         self.transformer = self._create_transformer()
 
     def _create_transformer(self):
@@ -56,7 +53,8 @@ class DataTransformer:
                 ('scaling', StandardScaler(), ['previous', 'campaign'])
             ],
             # leave the other columns unchanged
-            remainder='passthrough'
+            remainder='passthrough',
+            force_int_remainder_cols=False
         )
 
     def make_preprocess(self):
@@ -88,7 +86,8 @@ class DataTransformer:
         self.df.loc[:, 'contact'] = label_encoder.fit_transform(self.df['contact'])
 
     def _bin_age(self):
-        bins_age = pd.cut(self.df['age'], bins=len(self.age_order), labels=self.age_order)
+        bins_age = pd.cut(self.df['age'], bins=len(self.age_order),
+                          labels=self.age_order)  # [(16.919, 33.2] < (33.2, 49.4] < (49.4, 65.6] < (65.6, 81.8] < (81.8, 98.0]
         self.df.insert(1, 'bins_age', bins_age)
         self.df = self.df.drop('age', axis=1)
 

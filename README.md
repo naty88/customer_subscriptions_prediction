@@ -18,3 +18,6 @@
 |previous      |    False    | 42.99       |       |
 |poutcome      |    False    | 42.99       |       |
 |y             |    False    | 42.99       |       |
+
+
+#  python get_predictions.py ../data/test_file.xlsx

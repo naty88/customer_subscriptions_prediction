@@ -9,3 +9,8 @@ gen
 
 ### Python template
 __pycache__/
+
+# Model-specific stuff
+model/
+db.sqlite3
+*.pkl
