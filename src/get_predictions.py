@@ -46,7 +46,7 @@ def show_pos_predictions(y_pred, processed_test_data: pd.DataFrame):
     for idx in positive_pred_idxs:
         df = pd.Series(processed_test_data.iloc[idx]).to_frame().T
         df_list.append(df)
-    logger.info(f"Following client(s) would subscribe to to term deposit:\n{pd.concat(df_list)}")
+    logger.info(f"Following client(s) would subscribe to term deposit:\n{pd.concat(df_list)}")
 
 
 def produce_predictions(path_to_test_data: str):
