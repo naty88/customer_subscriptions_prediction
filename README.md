@@ -41,8 +41,8 @@
 | day_of_week  | categorical |                     last contact day of the week                      |                 'sun', 'mon', 'tue'                 |
 | duration     |   integer   |                   last contact duration, in seconds                   |                                                     |
 | campaign     |   integer   | number of contacts performed during this campaign and for this client |                                                     |
-| previous     |   integer   | number of contacts performed before this campaign and for this client |         'failure', 'nonexistent', 'success'         |
-| poutcome     | categorical |              outcome of the previous marketing campaign               |                                                     |
+| previous     |   integer   | number of contacts performed before this campaign and for this client |                                                     |
+| poutcome     | categorical |              outcome of the previous marketing campaign               |         'failure', 'nonexistent', 'success'         |
 | y            |   binary    |              has the client subscribed a term deposit?                |                                                     |
 
 Source: https://archive.ics.uci.edu/dataset/222/bank+marketing
