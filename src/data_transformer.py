@@ -1,8 +1,7 @@
-from typing import List, Dict, Any
 import pandas as pd
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, StandardScaler, LabelEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, StandardScaler, LabelEncoder
 
 
 class DataTransformer:
@@ -29,25 +28,6 @@ class DataTransformer:
         List of columns to be mapped using binary mapping.
     transformer : ColumnTransformer
         The column transformer pipeline.
-
-    Methods:
-    -------
-    _create_transformer() -> ColumnTransformer:
-        Creates the column transformer for encoding and scaling.
-    _apply_binary_mapping() -> None:
-        Applies binary mapping to specified columns.
-    _get_feature_names_out() -> List[str]:
-        Retrieves the output feature names after transformation.
-    _remove_duplicates() -> None:
-        Removes duplicate rows from the dataframe.
-    _remove_unknown() -> None:
-        Removes rows with unknown values in specific columns.
-    _combine_basic_education() -> None:
-        Combines different basic education levels into a single category.
-    _label_encode() -> None:
-        Applies label encoding to the contact column.
-    transform() -> pd.DataFrame:
-        Applies the transformations to the dataframe.
     """
 
     def __init__(self, df: pd.DataFrame):
@@ -116,9 +96,17 @@ class DataTransformer:
         )
 
     def _clean_data(self):
+        """
+        Cleans the data.
+        """
         self._remove_feature_columns()
         self._remove_duplicates()
         self._remove_unknown()
+
+    def _preprocess_data(self):
+        """
+        Preprocess some data.
+        """
         self._combine_basic_education()
         self._bin_age()
 
@@ -175,6 +163,7 @@ class DataTransformer:
             The transformed dataframe.
         """
         self._clean_data()
+        self._preprocess_data()
         self._label_encode()
         self._apply_binary_mapping()
         return self.df
