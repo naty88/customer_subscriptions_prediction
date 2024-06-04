@@ -1,0 +1,16 @@
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+# jupyter
+.ipynb_checkpoints
+
+### Python template
+__pycache__/
+
+# Model-specific stuff
+model/
+db.sqlite3
+*.pkl
