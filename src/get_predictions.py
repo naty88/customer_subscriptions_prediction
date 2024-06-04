@@ -1,27 +1,30 @@
 import logging
 import os
 import sys
-from typing import List
 
 import joblib
 import numpy as np
 import pandas as pd
 
-from data_transformer import DataTransformer
+from src.modeling_manager.data_transformer import DataTransformer
 from utils import read_xlsx, parse_args, create_logging, save_to_csv
 
 logger = logging.getLogger(__name__)
 
 
 def download_model_pipeline():
-    try:
-        model_dir = "../model"
-        path_to_model = os.listdir(model_dir)[0]
-        loaded_pipeline = joblib.load(os.path.join(model_dir, path_to_model))
-        logger.info("Model is ready for inference...")
-        return loaded_pipeline
-    except FileNotFoundError:
-        sys.exit(f"There is no file '{path_to_model}'. Please train the model first.")
+    model_dir = "../model"
+    if  os.path.exists(model_dir):
+        try:
+            path_to_model = os.listdir(model_dir)[0]
+            loaded_pipeline = joblib.load(os.path.join(model_dir, path_to_model))
+            logger.info("Model is ready for inference...")
+            return loaded_pipeline
+        except FileNotFoundError:
+            logger.error(f"There is no file '{path_to_model}'. Please train the model first.")
+    else:
+        logger.error(f"There is no model directory '{model_dir}' in the project. Please train a mode first with '../notebooks/model_selection.ipynb'")
+        sys.exit(0)
 
 
 def get_predictions(processed_test_data: pd.DataFrame):

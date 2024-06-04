@@ -8,7 +8,7 @@ from imblearn.pipeline import Pipeline as ImbPipeline
 from optuna import Trial
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
-from src.data_transformer import DataTransformer
+from src.modeling_manager.data_transformer import DataTransformer
 
 logger = logging.getLogger(__name__)
 

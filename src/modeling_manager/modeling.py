@@ -9,7 +9,7 @@ from imblearn.pipeline import Pipeline as ImbPipeline
 from sklearn.metrics import classification_report
 from sklearn.model_selection import StratifiedKFold, cross_validate
 
-from src.data_transformer import DataTransformer
+from src.modeling_manager.data_transformer import DataTransformer
 from src.utils import get_mean_val, create_directory
 
 logger = logging.getLogger(__name__)
