@@ -24,26 +24,23 @@
     ```
   - TODO: get predisctions after tuning
 
-## Dataset contains following features
- 
-TODO https://archive.ics.uci.edu/dataset/222/bank+marketing
+### The dataset includes the following features
+| Feature name |    Type     |                              Description                              |           Example of categorical features           |
+|:-------------|:-----------:|:---------------------------------------------------------------------:|:---------------------------------------------------:|
+| age          |   integer   |                                 23.99                                 |                                                     |
+| job          | categorical |                              type of job                              |       'admin', 'blue-collar', 'entrepreneur'        |
+| marital      | categorical |                            marital status                             |           'divorced', 'married', 'single'           |
+| education    | categorical |                            education level                            | 'basic.4y', 'basic.6y', 'high.school', 'illiterate' |
+| default      |   binary    |                     has client credit in default?                     |                                                     |
+| housing      |   binary    |                       has clienet housing loan?                       |                                                     |
+| loan         |   binary    |                       has client personal loan?                       |                                                     |
+| contact      | categorical |                      contact communication type                       |               'cellular', 'telephone'               |
+| month        | categorical |                      last contact month of year                       |                 'jan', 'feb', 'mar'                 |
+| day_of_week  | categorical |                     last contact day of the week                      |                 'sun', 'mon', 'tue'                 |
+| duration     |   integer   |                   last contact duration, in seconds                   |                                                     |
+| campaign     |   integer   | number of contacts performed during this campaign and for this client |                                                     |
+| previous     |   integer   | number of contacts performed before this campaign and for this client |        'failure', 'nonexistent', 'success')         |
+| poutcome     | categorical |              outcome of the previous marketing campaign               |                                                     |
+| y            |   binary    |              has the client subscribed a term deposit?                |                                                     |
 
-
-| Feature name |    Type     | Description | Values|
-|:-------------|:-----------:|:-----------:|:-----:|
-|age           |   Integer   | 23.99       |       |
-|job           | Categorical | 23.99       |       |
-|marital       | Categorical | 19.99       |       |
-|education     | Categorical | 42.99       |       |
-|default       |    Binary   | 42.99       |       |
-|housing       |    False    | 42.99       |       |
-|loan          |    False    | 42.99       |       |
-|contact       |    False    | 42.99       |       |
-|month         |    False    | 42.99       |       |
-|day_of_week   |    False    | 42.99       |       |
-|duration      |    False    | 42.99       |       |
-|campaign      |    False    | 42.99       |       |
-|previous      |    False    | 42.99       |       |
-|poutcome      |    False    | 42.99       |       |
-|y             |    False    | 42.99       |       |
-
+Source: https://archive.ics.uci.edu/dataset/222/bank+marketing
