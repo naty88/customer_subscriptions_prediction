@@ -16,10 +16,12 @@
     python get_predictions.py ../data/test_file.xlsx
     ```
 
-- Hyperparameter tuning is an optional step, that you can run after training (also with [model_selection.ipynb](notebooks%2Fmodel_selection.ipynb))
-  - model parameter will be optimized with [Optuna](https://optuna.readthedocs.io/en/stable/) framework
-  - you can observe the optimization process starting optuna dashboard from `notebooks/` directory using CLI:
-  ```shell
+- Hyperparameter tuning is an optional step, that be performed after training (also with [model_selection.ipynb](notebooks%2Fmodel_selection.ipynb))
+  - the model parameters are optimised with [Optuna](https://optuna.readthedocs.io/en/stable/) framework
+  - you can monitor the optimisation process with the Optuna Dashboard:
+    - start the dashboard from the `notebooks/` directory using CLI:  #TODO: change path
+
+    ```shell
     optuna-dashboard sqlite:///db.sqlite3
     ```
   - TODO: get predisctions after tuning
