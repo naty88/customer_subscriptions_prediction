@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from data_transformer import DataTransformer
-from utils import read_xlsx, parse_args, create_logging
+from utils import read_xlsx, parse_args, create_logging, save_to_csv
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ def prepare_test_data(path_to_test_data):
     test_df = read_xlsx(path_to_test_data)
     # initialize Preprocessor for test data
     data_transformer = DataTransformer(test_df)
-    return data_transformer.make_preprocess()
+    return data_transformer.clean_and_transform()
 
 
 def show_pos_predictions(y_pred, processed_test_data: pd.DataFrame):
@@ -52,6 +52,7 @@ def show_pos_predictions(y_pred, processed_test_data: pd.DataFrame):
 def produce_predictions(path_to_test_data: str):
     processed_test_df = prepare_test_data(path_to_test_data)
     y_predicted = get_predictions(processed_test_df)
+    save_to_csv(processed_test_df, y_predicted)
     show_pos_predictions(y_predicted, processed_test_df)
 
 

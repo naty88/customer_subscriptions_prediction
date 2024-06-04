@@ -66,27 +66,27 @@ class DataTransformer:
             transformers=[
                 # ordinal encoding
                 ('bins_age', Pipeline(steps=[
-                    ('ordinal', OrdinalEncoder(categories=[self.age_order])),
+                    ('ordinal', OrdinalEncoder(categories=[self.age_order], handle_unknown='use_encoded_value', unknown_value=-1)),
                     ('scaler', StandardScaler())
                 ]), ['bins_age']),
 
                 ('education', Pipeline(steps=[
-                    ('ordinal', OrdinalEncoder(categories=[self.education_order])),
+                    ('ordinal', OrdinalEncoder(categories=[self.education_order], handle_unknown='use_encoded_value', unknown_value=-1)),
                     ('scaler', StandardScaler())
                 ]), ['education']),
 
                 ('month', Pipeline(steps=[
-                    ('ordinal', OrdinalEncoder(categories=[self.month_order])),
+                    ('ordinal', OrdinalEncoder(categories=[self.month_order], handle_unknown='use_encoded_value', unknown_value=-1)),
                     ('scaler', StandardScaler())
                 ]), ['month']),
 
                 ('poutcome', Pipeline(steps=[
-                    ('ordinal', OrdinalEncoder(categories=[self.poutcome_order])),
+                    ('ordinal', OrdinalEncoder(categories=[self.poutcome_order], handle_unknown='use_encoded_value', unknown_value=-1)),
                     ('scaler', StandardScaler())
                 ]), ['poutcome']),
 
                 # One-Hot encoding for job and marital
-                ('job_marital', OneHotEncoder(), ['job', 'marital']),
+                ('job_marital', OneHotEncoder(handle_unknown='ignore'), ['job', 'marital']),
                 # Standard scaling of the rest numeric features
                 ('scaling', StandardScaler(), ['previous', 'campaign'])
             ],

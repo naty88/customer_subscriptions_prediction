@@ -21,3 +21,4 @@
 
 
 #  python get_predictions.py ../data/test_file.xlsx
+# optuna-dashboard sqlite:///db.sqlite3

@@ -3,13 +3,12 @@ from typing import Dict, List, Any
 
 import optuna
 import pandas as pd
-from optuna import Trial
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline as ImbPipeline
+from optuna import Trial
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
 from src.data_transformer import DataTransformer
-from src.modeling import save_best_model
 
 logger = logging.getLogger(__name__)
 
@@ -97,8 +96,8 @@ class Optimizer:
     def hyperparameter_tuning(
             self,
             data_transformer: DataTransformer,
-            X_train: pd.DataFrame,
-            y_train: pd.Series
+            x_train: pd.DataFrame,
+            y_train: pd.Series,
     ) -> None:
         """
         Performs hyperparameter tuning and saves the best model.
@@ -124,13 +123,17 @@ class Optimizer:
             ])
 
             skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-            cv_scores = cross_val_score(pipeline, X_train, y_train, scoring='f1', cv=skf, n_jobs=-1)
+            cv_scores = cross_val_score(pipeline, x_train, y_train, scoring='f1', cv=skf, n_jobs=-1)
             return cv_scores.mean()
 
-        study = optuna.create_study(direction='maximize', pruner=optuna.pruners.MedianPruner())
+        study = optuna.create_study(direction='maximize',
+                                    pruner=optuna.pruners.MedianPruner(),
+                                    storage="sqlite:///db.sqlite3"
+                                    )
         study.optimize(objective, n_trials=self.n_trials)
         logger.info(f'Best hyperparameters: {study.best_params}')
 
+        # train tuned model with new parameters
         best_params = study.best_params
         optimized_model = self.model_class(**best_params)
 
@@ -140,6 +143,6 @@ class Optimizer:
             ('classifier', optimized_model)
         ])
 
-        pipeline.fit(X_train, y_train)
-        save_best_model(pipeline, file_name="trained_model_pipeline_tuned.pkl")
-        logger.info("Best model saved to trained_model_pipeline_tuned.pkl")
+        pipeline.fit(x_train, y_train)
+
+        return pipeline

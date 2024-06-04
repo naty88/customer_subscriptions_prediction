@@ -2,28 +2,23 @@ import logging
 import os
 from typing import Dict, Any
 
-import optuna
+import joblib
 import pandas as pd
 from imblearn.over_sampling import SMOTE
-from sklearn.compose import ColumnTransformer
-from sklearn.model_selection import cross_val_score, StratifiedKFold, cross_validate
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
 from imblearn.pipeline import Pipeline as ImbPipeline
-
-import joblib
+from sklearn.metrics import classification_report
+from sklearn.model_selection import StratifiedKFold, cross_validate
 
 from src.data_transformer import DataTransformer
 from src.utils import get_mean_val, create_directory
 
-
 logger = logging.getLogger(__name__)
 
 
-def evaluate_models(x_train: pd.DataFrame,
-                    y_train: pd.DataFrame,
-                    data_transformer: DataTransformer,
-                    models_list: Dict[str, Any]):
+def select_model(x_train: pd.DataFrame,
+                 y_train: pd.DataFrame,
+                 data_transformer: DataTransformer,
+                 models_list: Dict[str, Any]):
     results = {}
     skf = StratifiedKFold(n_splits=5, shuffle=True,
                           random_state=42)  # StratifiedKFold is used by default for classification tasks
@@ -62,7 +57,16 @@ def train_best_model(models: Dict[str, Any],
     return pipeline
 
 
-def save_best_model(pipeline: ImbPipeline, file_name="trained_model_pipeline.pkl"):
+def evaluate_model(pipeline: ImbPipeline,
+                   x_test: pd.DataFrame,
+                   y_test: pd.DataFrame
+                   ):
+    y_pred = pipeline.predict(x_test)
+    logger.info(f"\n{classification_report(y_test, y_pred)}")
+    return y_pred
+
+
+def save_model(pipeline: ImbPipeline, file_name="trained_model_pipeline.pkl"):
     model_dir = create_directory('../model')
     path_to_pipeline = os.path.join(model_dir, file_name)
     joblib.dump(pipeline, path_to_pipeline)
