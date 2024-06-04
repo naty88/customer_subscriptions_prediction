@@ -41,7 +41,8 @@ class DataTransformer:
         """
         self.df = df
 
-        self.features_to_remove = ["duration", "day_of_week"]
+        self.features_to_remove = ["duration"]
+        self.day_order = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
         self.age_order = ["young", "young_adult", "middle_aged", "late_middle_aged", "old_age"]
         self.education_order = ["illiterate", "education.basic", "high.school", "professional.course",
                                 "university.degree"]
@@ -65,28 +66,33 @@ class DataTransformer:
         return ColumnTransformer(
             transformers=[
                 # ordinal encoding
+                ('day_of_week', Pipeline(steps=[
+                    ('ordinal', OrdinalEncoder(categories=[self.day_order])),
+                    ('scaler', StandardScaler())
+                ]), ['day_of_week']),
+
                 ('bins_age', Pipeline(steps=[
-                    ('ordinal', OrdinalEncoder(categories=[self.age_order], handle_unknown='use_encoded_value', unknown_value=-1)),
+                    ('ordinal', OrdinalEncoder(categories=[self.age_order])),
                     ('scaler', StandardScaler())
                 ]), ['bins_age']),
 
                 ('education', Pipeline(steps=[
-                    ('ordinal', OrdinalEncoder(categories=[self.education_order], handle_unknown='use_encoded_value', unknown_value=-1)),
+                    ('ordinal', OrdinalEncoder(categories=[self.education_order])),
                     ('scaler', StandardScaler())
                 ]), ['education']),
 
                 ('month', Pipeline(steps=[
-                    ('ordinal', OrdinalEncoder(categories=[self.month_order], handle_unknown='use_encoded_value', unknown_value=-1)),
+                    ('ordinal', OrdinalEncoder(categories=[self.month_order])),
                     ('scaler', StandardScaler())
                 ]), ['month']),
 
                 ('poutcome', Pipeline(steps=[
-                    ('ordinal', OrdinalEncoder(categories=[self.poutcome_order], handle_unknown='use_encoded_value', unknown_value=-1)),
+                    ('ordinal', OrdinalEncoder(categories=[self.poutcome_order])),
                     ('scaler', StandardScaler())
                 ]), ['poutcome']),
 
                 # One-Hot encoding for job and marital
-                ('job_marital', OneHotEncoder(handle_unknown='ignore'), ['job', 'marital']),
+                ('job_marital', OneHotEncoder(), ['job', 'marital']),
                 # Standard scaling of the rest numeric features
                 ('scaling', StandardScaler(), ['previous', 'campaign'])
             ],
@@ -128,11 +134,11 @@ class DataTransformer:
 
     def _remove_unknown(self) -> None:
         """
-        Removes rows with unknown values in specific columns.
+        Removes rows with unknown values from dataframe.
         """
-        unknown_columns = ["job", "education", "default", "housing"]
-        for column in unknown_columns:
-            self.df = self.df[self.df[column] != "unknown"]
+        categorical_columns = self.df.select_dtypes(include=['object']).columns
+        mask = ~self.df[categorical_columns].apply(lambda x: x.str.contains('unknown')).any(axis=1)
+        self.df.drop(index=self.df.index[~mask], inplace=True)
 
     def _combine_basic_education(self) -> None:
         """
@@ -144,7 +150,7 @@ class DataTransformer:
         bins_age = pd.cut(self.df['age'], bins=len(self.age_order),
                           labels=self.age_order)  # [(16.919, 33.2] < (33.2, 49.4] < (49.4, 65.6] < (65.6, 81.8] < (81.8, 98.0]
         self.df.insert(1, 'bins_age', bins_age)
-        self.df = self.df.drop('age', axis=1)
+        self.df.drop('age', axis=1, inplace=True)
 
     def _label_encode(self) -> None:
         """
