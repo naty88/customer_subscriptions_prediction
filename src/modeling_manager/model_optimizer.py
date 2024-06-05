@@ -123,7 +123,7 @@ class Optimizer:
             return cv_scores.mean()
 
         study = optuna.create_study(direction='maximize',
-                                    pruner=optuna.pruners.MedianPruner(n_startup_trials=5),
+                                    pruner=optuna.pruners.MedianPruner(),
                                     storage="sqlite:///../db.sqlite3"
                                     )
         study.optimize(objective, n_trials=self.n_trials)
