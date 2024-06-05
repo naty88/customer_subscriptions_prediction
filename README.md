@@ -1,32 +1,65 @@
-# User subscription prediction
+# Customer subscription prediction
+
+## Project Overview
+
+This project aims to predict customer subscriptions for term deposits using a dataset from a bank marketing campaign.
+The project involves exploratory data analysis (EDA), model selection, training, and hyperparameter tuning to optimize
+the prediction model's performance.
 
 ## Repository Structure
+
 - Notebooks:
-  - EDA_analysis: [EDA_analysis.ipynb](notebooks%2FEDA_analysis.ipynb)
-  - Model selection: [model_selection.ipynb](notebooks%2Fmodel_selection.ipynb)
+    - EDA analysis: [EDA_analysis.ipynb](notebooks%2FEDA_analysis.ipynb)
+    - Model selection: [model_selection.ipynb](notebooks%2Fmodel_selection.ipynb)
 - Source directory:
-  - [src/get_predictions.py](src%2Fget_predictions.py)
-  - [src/utils.py](src%2Futils.py)
+    - Prediction Script: [src/get_predictions.py](src%2Fget_predictions.py)
+    - Utility functions: [src/utils.py](src%2Futils.py)
 
-## Usage / How to Run
-- install dependencies from [requirements.txt](%2Frequirements.txt)
-- select the best model and then train it with [model_selection.ipynb](notebooks%2Fmodel_selection.ipynb)
-- start from src/ directory [get_predictions.py](src%2Fget_predictions.py) to generate predictions for [test_file.xlsx](data%2Ftest_file.xlsx)
-    ```shell
-    python get_predictions.py ../data/test_file.xlsx
-    ```
+## Installation Instructions
 
-- Hyperparameter tuning is an optional step, that be performed after training (also with [model_selection.ipynb](notebooks%2Fmodel_selection.ipynb))
-  - the model parameters are optimised with [Optuna](https://optuna.readthedocs.io/en/stable/) framework
-  - you can monitor the optimisation process with the Optuna Dashboard:
-    - start the dashboard from the `notebooks/` directory using CLI:  #TODO: change path
+To set up the project environment, clone the repository and install the required dependencies
+from [requirements.txt](%2Frequirements.txt) file:
 
-    ```shell
-    optuna-dashboard sqlite:///db.sqlite3
-    ```
-  - TODO: get predisctions after tuning
+```shell
+pip install -r requirements.txt
+```
 
-### The dataset includes the following features
+## Usage guidelines
+
+### Model Selection and Training
+
+1. Perform exploratory data analysis and model selection using the Jupyter notebook:
+   ```shell
+   jupyter lab notebooks/model_selection.ipynb
+   ```
+2. Train the selected model and perform optional hyperparameter tuning using the same notebook.
+
+### Hyperparameter Tuning
+
+1. Hyperparameter tuning can be performed after training using [Optuna](https://optuna.readthedocs.io/en/stable/)
+   framework.
+2. Monitor the optimization process with the Optuna Dashboard. Start the dashboard from the _root_
+   directory `user_subscription_prediction/` using CLI:
+    3. Run:
+   ```shell
+   optuna-dashboard sqlite:///db.sqlite3
+   ```
+    4. Go to: http://127.0.0.1:8080/
+
+### Generating Predictions
+
+1. To generate predictions for a given test file, use the [src/get_predictions.py](src%2Fget_predictions.py) script. Run
+   the script form `src/` directory:
+   ```shell
+   python src/get_predictions.py data/test_file.xlsx
+   ```
+2. If you have performed hyperparameter tuning, you can use the tuned model by adding the `-t True` flag:
+   ```shell
+   python src/get_predictions.py data/test_file.xlsx -t True
+   ```
+
+## The dataset includes the following features
+
 | Feature name |    Type     |                              Description                              |           Example of categorical features           |
 |:-------------|:-----------:|:---------------------------------------------------------------------:|:---------------------------------------------------:|
 | age          |   integer   |                                 23.99                                 |                                                     |
@@ -43,6 +76,6 @@
 | campaign     |   integer   | number of contacts performed during this campaign and for this client |                                                     |
 | previous     |   integer   | number of contacts performed before this campaign and for this client |                                                     |
 | poutcome     | categorical |              outcome of the previous marketing campaign               |         'failure', 'nonexistent', 'success'         |
-| y            |   binary    |              has the client subscribed a term deposit?                |                                                     |
+| y            |   binary    |               has the client subscribed a term deposit?               |                                                     |
 
 Source: https://archive.ics.uci.edu/dataset/222/bank+marketing

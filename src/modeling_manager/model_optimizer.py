@@ -3,12 +3,11 @@ from typing import Dict, List, Any
 
 import optuna
 import pandas as pd
-from imblearn.over_sampling import SMOTE
-from imblearn.pipeline import Pipeline as ImbPipeline
 from optuna import Trial
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
 from src.modeling_manager.data_transformer import DataTransformer
+from src.modeling_manager.modeling import build_pipeline
 
 logger = logging.getLogger(__name__)
 
@@ -116,19 +115,15 @@ class Optimizer:
             params = self._suggest_optuna_params(trial)
             model_to_optimize = self.model_class(**params)
 
-            pipeline = ImbPipeline(steps=[
-                ('preprocessor', data_transformer.transformer),
-                ('smote', SMOTE()),
-                ('classifier', model_to_optimize)
-            ])
+            pipeline = build_pipeline(model_to_optimize, data_transformer)
 
             skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
             cv_scores = cross_val_score(pipeline, x_train, y_train, scoring='f1', cv=skf, n_jobs=-1)
             return cv_scores.mean()
 
         study = optuna.create_study(direction='maximize',
-                                    pruner=optuna.pruners.MedianPruner(),
-                                    storage="sqlite:///db.sqlite3"
+                                    pruner=optuna.pruners.MedianPruner(n_startup_trials=5),
+                                    storage="sqlite:///../db.sqlite3"
                                     )
         study.optimize(objective, n_trials=self.n_trials)
         logger.info(f'Best hyperparameters: {study.best_params}')
@@ -137,11 +132,7 @@ class Optimizer:
         best_params = study.best_params
         optimized_model = self.model_class(**best_params)
 
-        pipeline = ImbPipeline(steps=[
-            ('preprocessor', data_transformer.transformer),
-            ('smote', SMOTE()),
-            ('classifier', optimized_model)
-        ])
+        pipeline = build_pipeline(optimized_model, data_transformer)
 
         pipeline.fit(x_train, y_train)
 
