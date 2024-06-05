@@ -92,11 +92,14 @@ def prepare_test_data(path_to_test_data):
 def show_pos_predictions(y_pred, processed_test_data: pd.DataFrame):
     # get indexes of positive predictions
     positive_pred_idxs = np.where(y_pred == 1)[0]
-    df_list = []
-    for idx in positive_pred_idxs:
-        df = pd.Series(processed_test_data.iloc[idx]).to_frame().T
-        df_list.append(df)
-    logger.info(f"Following client(s) would subscribe to term deposit:\n{pd.concat(df_list)}")
+    if positive_pred_idxs.size > 0:
+        df_list = []
+        for idx in positive_pred_idxs:
+            df = pd.Series(processed_test_data.iloc[idx]).to_frame().T
+            df_list.append(df)
+        logger.info(f"Following client(s) would subscribe to term deposit:\n{pd.concat(df_list)}")
+    else:
+        logger.info(f"No client(s) would subscribe to term deposit: there is no positive predictions.")
 
 
 def produce_predictions(path_to_test_data: str, is_tuned_model_used: bool):

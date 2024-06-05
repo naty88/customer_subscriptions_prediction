@@ -80,7 +80,7 @@ def build_pipeline(model, data_transformer: DataTransformer) -> ImbPipeline:
     """
     return ImbPipeline(steps=[
         ('preprocessor', data_transformer.transformer),
-        ('smote', SMOTE(sampling_strategy="all")),
+        ('smote', SMOTE(sampling_strategy="all")),  # we should balance the data because we have an imbalanced data set
         ('classifier', model)
     ])
 

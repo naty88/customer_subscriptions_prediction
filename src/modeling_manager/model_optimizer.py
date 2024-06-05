@@ -3,6 +3,7 @@ from typing import Dict, List, Any
 
 import optuna
 import pandas as pd
+from imblearn.pipeline import Pipeline as ImbPipeline
 from optuna import Trial
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
@@ -97,7 +98,7 @@ class Optimizer:
             data_transformer: DataTransformer,
             x_train: pd.DataFrame,
             y_train: pd.Series,
-    ) -> None:
+    ) -> ImbPipeline:
         """
         Performs hyperparameter tuning and saves the best model.
 

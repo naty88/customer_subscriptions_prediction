@@ -51,11 +51,11 @@ pip install -r requirements.txt
 1. To generate predictions for a given test file, use the [src/get_predictions.py](src%2Fget_predictions.py) script. Run
    the script form `src/` directory:
    ```shell
-   python src/get_predictions.py data/test_file.xlsx
+   python get_predictions.py ../data/test_file.xlsx
    ```
 2. If you have performed hyperparameter tuning, you can use the tuned model by adding the `-t True` flag:
    ```shell
-   python src/get_predictions.py data/test_file.xlsx -t True
+   python get_predictions.py ../data/test_file.xlsx -t True
    ```
 
 ## The dataset includes the following features
@@ -67,7 +67,7 @@ pip install -r requirements.txt
 | marital      | categorical |                            marital status                             |           'divorced', 'married', 'single'           |
 | education    | categorical |                            education level                            | 'basic.4y', 'basic.6y', 'high.school', 'illiterate' |
 | default      |   binary    |                     has client credit in default?                     |                                                     |
-| housing      |   binary    |                       has clienet housing loan?                       |                                                     |
+| housing      |   binary    |                       has client housing loan?                       |                                                     |
 | loan         |   binary    |                       has client personal loan?                       |                                                     |
 | contact      | categorical |                      contact communication type                       |               'cellular', 'telephone'               |
 | month        | categorical |                      last contact month of year                       |                 'jan', 'feb', 'mar'                 |
