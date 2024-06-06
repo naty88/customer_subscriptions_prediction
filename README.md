@@ -39,7 +39,7 @@ pip install -r requirements.txt
 1. Hyperparameter tuning can be performed after training using [Optuna](https://optuna.readthedocs.io/en/stable/)
    framework.
 2. Monitor the optimization process with the Optuna Dashboard. Start the dashboard from the _root_
-   directory `user_subscription_prediction/` using CLI:
+   directory `customer_subscriptions_prediction/` using CLI:
     3. Run:
    ```shell
    optuna-dashboard sqlite:///db.sqlite3
